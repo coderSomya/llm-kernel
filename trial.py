@@ -1,10 +1,15 @@
 import requests
 
-def ask_ollama_stream(query, model="qwen2.5:latest"):
+
+def ask_ollama_stream(query, model="qwen2.5:latest", system_prompt=None):
     url = "http://localhost:11434/api/chat"
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": query})
     payload = {
         "model": model,
-        "messages": [{"role": "user", "content": query}],
+        "messages": messages,
         "stream": True
     }
     buffer = []
@@ -24,7 +29,19 @@ def ask_ollama_stream(query, model="qwen2.5:latest"):
         return f"Error communicating with Ollama: {e}"
 
 
-ques = """Create a simple character device driver that supports basic read/write operations with a
- 1KB internal buffer"""
-result = ask_ollama_stream(ques)
-print(result)
+with open("kernel_standards.txt", "r") as f:
+    kernel_standards = f.read()
+
+ques = """
+Create a simple character device driver that supports basic read/write operations with a
+1KB internal buffer
+Return only the code, no other text. No backticks. Just the simple executable code.
+Follow the linux kernel coding style.
+Use the latest linux kernel version.
+Do not include any other text or explanation in the response.
+"""
+
+result = ask_ollama_stream(ques, system_prompt=kernel_standards)
+
+with open("generated_driver.c", "w") as f:
+    f.write(result)
