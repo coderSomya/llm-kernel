@@ -9,7 +9,8 @@ from scoring_analytics_engine import ScoringEngine
 
 
 def ask_ollama_stream(query, model="qwen2.5:latest", system_prompt=None):
-    url = "http://localhost:11434/api/chat"
+    ollama_host = os.getenv('OLLAMA_HOST', 'localhost')
+    url = f"http://{ollama_host}:11434/api/chat"
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
@@ -160,7 +161,7 @@ def run_enhanced_evaluation(model="qwen2.5:latest", test_name="simple_char_drive
     result = ask_ollama_stream(test_prompt["prompt"], model, kernel_standards)
     
     # Save generated code
-    output_file = f"generated_{test_prompt['name']}.c"
+    output_file = f"results/generated_{test_prompt['name']}.c"
     with open(output_file, "w") as f:
         f.write(result)
     
@@ -240,7 +241,7 @@ def run_enhanced_evaluation(model="qwen2.5:latest", test_name="simple_char_drive
         print(f"  {feature}: {'✓' if found else '✗'}")
     
     # Save detailed results
-    results_file = f"detailed_results_{test_prompt['name']}.json"
+    results_file = f"results/detailed_results_{test_prompt['name']}.json"
     scoring_engine.export_results(evaluation_result, results_file)
     print(f"\nDetailed results saved to: {results_file}")
     

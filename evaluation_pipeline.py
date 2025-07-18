@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 import time
@@ -8,9 +9,10 @@ from scoring_analytics_engine import ScoringEngine, EvaluationResult
 
 
 class OllamaInterface:
-    def __init__(self, base_url: str = "http://localhost:11434"):
-        self.base_url = base_url
-        
+    def __init__(self, base_url: str = "http://10.145.25.39:11434"):
+        ollama_host = os.getenv('OLLAMA_HOST', 'localhost')
+        self.base_url = f"http://{ollama_host}:11434"
+
     def generate_driver_code(self, prompt: str, model: str = "qwen2.5:latest", 
                            system_prompt: str = None) -> str:
         url = f"{self.base_url}/api/chat"

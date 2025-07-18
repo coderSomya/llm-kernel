@@ -1,0 +1,44 @@
+{
+  "compilation": {
+    "success": false,
+    "error_count": 0,
+    "warning_count": 0,
+    "build_time": 0.0032792091369628906,
+    "binary_size": null
+  },
+  "static_analysis": {
+    "sparse_issues": 2,
+    "checkpatch_violations": 69,
+    "cppcheck_issues": 1,
+    "custom_rule_violations": 0,
+    "api_compliance_score": 0.0
+  },
+  "security": {
+    "buffer_safety_score": 1.0,
+    "memory_leak_risk": 0.0,
+    "race_condition_risk": 0.0,
+    "input_validation_score": 0.8,
+    "privilege_escalation_risk": 0.1
+  },
+  "code_quality": {
+    "style_compliance": 0.8,
+    "cyclomatic_complexity": 276.3333333333333,
+    "function_length_avg": 11.333333333333334,
+    "comment_ratio": 0.1308411214953271,
+    "maintainability_index": 0.0
+  },
+  "functionality": {
+    "basic_operations_score": 1.0,
+    "error_handling_score": 0.18181818181818182,
+    "edge_case_handling": 0.6,
+    "api_correctness": 0.7
+  },
+  "overall_score": 0.3965654205607476,
+  "weighted_scores": {
+    "compilation": 0.0,
+    "static_analysis": 0.07250000000000001,
+    "security": 0.225,
+    "code_quality": 0.04906542056074766,
+    "functionality": 0.05
+  }
+}

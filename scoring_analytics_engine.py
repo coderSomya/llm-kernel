@@ -211,7 +211,7 @@ class StaticAnalyzer:
     def analyze_cyclomatic_complexity(self, code: str) -> float:
         complexity_keywords = [
             'if', 'else', 'elif', 'while', 'for', 'switch', 
-            'case', 'default', 'catch', '&&', '||', '?'
+            'case', 'default', 'catch', '&&', '||'
         ]
         
         total_complexity = 1
