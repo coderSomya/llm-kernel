@@ -20,12 +20,12 @@ main files
 ├── evaluation_config.py        # Configuration and test definitions
 ├── enhanced_evaluation.py     # Extended evaluation features
 ├── kernel_standards.txt       # Linux kernel coding standards
-├── generated_driver.c         # Output from driver generation
 ├── requirements.txt           # Python dependencies
 └── README.md                 # This file
 
 standalone testing files
 ├── analyze_kernel_code.py      # Standalone kernel code analysis
+├── generated_driver.c         # Output from driver generation
 ├── trial.py                   # Simple driver generation test
 
 docker files
