@@ -25,7 +25,7 @@ class ToolConfig:
 class EvaluationConfig:
     scoring_weights: ScoringWeights
     tool_config: ToolConfig
-    ollama_base_url: str = "http://localhost:11434"
+    ollama_base_url: str = "http://10.145.25.39:11434"
     default_model: str = "qwen2.5:latest"
     output_directory: str = "evaluation_results"
     kernel_headers_path: str = "/lib/modules/$(shell uname -r)/build"
