@@ -1,5 +1,8 @@
+# Start OLLAMA
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
+
 # Make executable
-chmod +x run.sh debug.sh
+chmod +x run.sh run.sh
 
 # Create results directory
 mkdir results
@@ -12,3 +15,8 @@ mkdir results
 
 # Debug if needed
 ./debug.sh
+
+
+# Run with feedback
+./run_training.sh --model qwen2.5:latest --test simple_char_driver --iterations 5
+

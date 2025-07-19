@@ -16,7 +16,7 @@ class FeedbackGenerator:
         feedback = f"ITERATION {iteration} - CODE REVIEW FEEDBACK\n\nOVERALL SCORE: {evaluation_result.overall_score:.2f}/1.00\n\nCRITICAL ISSUES TO FIX:\n\n"
         
         if not evaluation_result.compilation.success:
-            feedback += "COMPILATION FAILED:\nYour code does not compile. This is the highest priority issue.\n\nCommon kernel driver compilation issues:\n- Wrong function signatures in file_operations\n- Missing or incorrect #include statements\n- Using undefined functions or variables\n- API misuse (mixing different kernel subsystems)\n- Syntax errors or typos\n\n"
+            feedback += "COMPILATION FAILED:\nYour code does not compile. This is the highest priority issue.\n\n (```c```) encapsulation is not needed. \n\nCommon kernel driver compilation issues:\n- Wrong function signatures in file_operations\n- Missing or incorrect #include statements\n- Using undefined functions or variables\n- API misuse (mixing different kernel subsystems)\n- Syntax errors or typos\n\n"
         
         if evaluation_result.static_analysis.sparse_issues > 0:
             feedback += f"STATIC ANALYSIS ISSUES ({evaluation_result.static_analysis.sparse_issues} Sparse issues):\n- Check for type mismatches\n- Verify pointer usage\n- Fix endianness issues\n- Address context violations (atomic vs non-atomic)\n\n"

@@ -3,82 +3,90 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
-#include <linux/uaccess.h>
-#include <asm/ioctl.h>
+#include <asm/uaccess.h>
 
-#define CLASS_NAME "simple_char_dev"
 #define DEVICE_NAME "simple_dev"
+#define CLASS_NAME  "simple_class"
 #define BUFFER_SIZE 1024
 
 static int major_number;
-static struct class *dev_class = NULL;
-static struct device *dev_device = NULL;
+static struct class* simple_class = NULL;
+static struct device* simple_device = NULL;
 static char buffer[BUFFER_SIZE];
 staticloff_t file_offset;
 
-static ssize_t simple_read(struct file *, char __user *, size_t, loff_t *);
-static ssize_t simple_write(struct file *, const char __user *, size_t, loff_t *);
+static ssize_t
+simple_read(struct file *filp, char __user *buf, size_t count, loff_t *fpos)
+{
+	if (*fpos >= BUFFER_SIZE) {
+		count = 0;
+	} else {
+		count = min(count, BUFFER_SIZE - *fpos);
+		copy_to_user(buf, buffer + *fpos, count);
+		*fpos += count;
+	}
+	return count;
+}
 
-static struct file_operations fops = {
+static ssize_t
+simple_write(struct file *filp, const char __user *buf, size_t count, loff_t *fpos)
+{
+	if (*fpos >= BUFFER_SIZE) {
+		count = 0;
+	} else {
+		count = min(count, BUFFER_SIZE - *fpos);
+		copy_from_user(buffer + *fpos, buf, count);
+		*fpos += count;
+	}
+	return count;
+}
+
+static struct file_operations fops =
+{
 	.read = simple_read,
-	.write = simple_write
+	.write = simple_write,
 };
 
-static int __init simple_char_dev_init(void) {
+static int __init simple_init(void)
+{
 	major_number = register_chrdev(0, DEVICE_NAME, &fops);
+
 	if (major_number < 0) {
+		print_kernel_err("register_chrdev failed\n");
 		return major_number;
 	}
 
-	dev_class = class_create(THIS_MODULE, CLASS_NAME);
-	if (IS_ERR(dev_class)) {
+	simple_class = class_create(THIS_MODULE, CLASS_NAME);
+	if (IS_ERR(simple_class)) {
 		unregister_chrdev(major_number, DEVICE_NAME);
-		return PTR_ERR(dev_class);
+		print_kernel_err("class_create failed\n");
+		return PTR_ERR(simple_class);
 	}
 
-	dev_device = device_create(dev_class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
-	if (IS_ERR(dev_device)) {
-	.class_destroy(dev_class);
+	simple_device = device_create(simple_class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
+	if (IS_ERR(simple_device)) {
+		class_destroy(simple_class);
 		unregister_chrdev(major_number, DEVICE_NAME);
-		return PTR_ERR(dev_device);
+		print_kernel_err("device_create failed\n");
+		return PTR_ERR(simple_device);
 	}
 
-	printk(KERN_INFO "Simple character device loaded\n");
+	print_kernel_info("Module initialized successfully\n");
 	return 0;
 }
 
-static void __exit simple_char_dev_exit(void) {
-	device_destroy(dev_class, MKDEV(major_number, 0));
-	class_destroy(dev_class);
+static void __exit simple_exit(void)
+{
+	device_destroy(simple_class, MKDEV(major_number, 0));
+	class_destroy(simple_class);
 	unregister_chrdev(major_number, DEVICE_NAME);
-	printk(KERN_INFO "Simple character device unloaded\n");
+
+	print_kernel_info("Module removed successfully\n");
 }
 
-static ssize_t simple_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos) {
-	if (*f_pos >= BUFFER_SIZE)
-		return 0;
-
-	size_t len = BUFFER_SIZE - *f_pos;
-	if (copy_to_user(buf, buffer + *f_pos, len))
-		return -EFAULT;
-
-	*f_pos += len;
-	return len;
-}
-
-static ssize_t simple_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos) {
-	if (*f_pos >= BUFFER_SIZE)
-		return 0;
-
-	size_t len = BUFFER_SIZE - *f_pos;
-	if (copy_from_user(buffer + *f_pos, buf, len))
-		return -EFAULT;
-
-	*f_pos += len;
-	return len;
-}
-
-module_init(simple_char_dev_init);
-module_exit(simple_char_dev_exit);
+module_init(simple_init);
+module_exit(simple_exit);
 
 MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Your Name");
+MODULE_DESCRIPTION("Simple character device driver");

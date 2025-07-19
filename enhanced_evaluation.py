@@ -152,13 +152,20 @@ def run_enhanced_evaluation(model="qwen2.5:latest", test_name="simple_char_drive
     
     # Find the test prompt
     test_prompt = next((t for t in test_prompts if t["name"] == test_name), test_prompts[0])
+
+    direction = """Return only the code, no other text. No backticks. Just the simple executable code.
+                    Follow the linux kernel coding style.
+                    Use the latest linux kernel version.
+                    Do not include any other text or explanation in the response.
+                    No backticks (```c``) either. Just directly executable code.
+                    """
     
     print(f"Generating code for: {test_prompt['name']}")
     print(f"Using model: {model}")
     print("-" * 60)
     
     # Generate code
-    result = ask_ollama_stream(test_prompt["prompt"], model, kernel_standards)
+    result = ask_ollama_stream(test_prompt["prompt"]+direction, model, kernel_standards)
     
     # Save generated code
     output_file = f"results/generated_{test_prompt['name']}.c"

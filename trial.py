@@ -2,7 +2,7 @@ import requests
 
 
 def ask_ollama_stream(query, model="qwen2.5:latest", system_prompt=None):
-    url = "http://10.145.25.39:11434/api/chat"
+    url = "http://192.168.1.2:11434/api/chat"
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
