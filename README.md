@@ -4,7 +4,7 @@
 
 This project evaluates Large Language Models (LLMs) for their ability to generate Linux kernel device drivers. It provides a comprehensive framework that tests LLM-generated driver code across multiple dimensions including compilation success, static analysis, security vulnerabilities, code quality, and functionality.
 
-## Project Goals
+## Assignment Goals
 
 - **Automated Evaluation**: Test LLMs on various driver types (character, block, network, platform, USB)
 - **Multi-dimensional Scoring**: Assess code quality, security, compilation, and functionality
